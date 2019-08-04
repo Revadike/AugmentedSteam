@@ -45,6 +45,7 @@ Language.languages = {
     "greek": "el",
     "german": "de",
     "hungarian": "hu",
+    "indonesian": "id",
     "italian": "it",
     "japanese": "ja",
     "koreana": "ko",
