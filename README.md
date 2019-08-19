@@ -1,7 +1,9 @@
-Augmented Steam
+Unofficial Augmented Steam
 ==============
 
 Enhanced Steam fork by IsThereAnyDeal.
+
+Augmented Steam fork by Revadike.
 
 This is an extension repository, find [server repository here](https://github.com/tfedor/AugmentedSteam_Server).
 
