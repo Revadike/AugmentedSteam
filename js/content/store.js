@@ -585,7 +585,6 @@ class AppPageClass extends StorePageClass {
         this.addHltb();
 
         this.replaceDevPubLinks();
-        this.addSupport();
         this.moveUsefulLinks();
         this.addLinks("app");
         this.addTitleHighlight();
@@ -604,7 +603,7 @@ class AppPageClass extends StorePageClass {
 
         this.addReviewToggleButton();
         this.addHelpButton();
-
+        this.addSupport();
     }
 
     initHdPlayer() {
@@ -857,10 +856,7 @@ class AppPageClass extends StorePageClass {
             activeStyle = "";
         }
 
-        HTML.afterEnd(".queue_control_button.queue_btn_ignore",
-            `<div id='esi-store-user-note' class='esi-note esi-note--store ${cssClass}'>${noteText}</div>`);
-
-        HTML.afterEnd(".queue_control_button.queue_btn_ignore",
+        HTML.beforeBegin(".queue_actions_ctn > :last-child",
             ` <div class="queue_control_button js-user-note-button">
                 <div id="es_add_note" class="btnv6_blue_hoverfade btn_medium queue_btn_inactive" style="${inactiveStyle}">
                     <span>${Localization.str.user_note.add}</span>
@@ -869,6 +865,9 @@ class AppPageClass extends StorePageClass {
                     <span>${Localization.str.user_note.update}</span>
                 </div>
             </div>`);
+
+        HTML.beforeEnd(".queue_actions_ctn",
+            `<div id='esi-store-user-note' class='esi-note esi-note--store ${cssClass}'>${noteText}</div>`);
 
         function toggleState(node, active) {
             let button = document.querySelector(".js-user-note-button");
@@ -1368,17 +1367,15 @@ class AppPageClass extends StorePageClass {
     replaceDevPubLinks() {
         if (!this.isAppPage()) { return; }
 
-        let rows = document.querySelectorAll(".dev_row");
-        for (let i=0, len=rows.length; i<len; i++) {
-            let linkNode = rows[i].querySelector("a");
+        let rows = document.querySelectorAll(".dev_row a");
+        for (let linkNode of rows) {
             let homepageLink = new URL(linkNode.href);
             if (homepageLink.pathname === "/search/") {
                 continue;
             }
 
             let parts = homepageLink.pathname.split(`/`);
-            let searchLink = `https://store.steampowered.com/search/?${parts[1]}=${encodeURIComponent(parts[2])}`;
-            linkNode.href = searchLink;
+            linkNode.href = `https://store.steampowered.com/search/?${parts[1]}=${encodeURIComponent(parts[2])}`;
             HTML.afterEnd(linkNode, ` (<a href="${homepageLink.href}">${Localization.str.options.homepage}</a>)`);
         }
     }
@@ -1388,27 +1385,36 @@ class AppPageClass extends StorePageClass {
         if (this.isDlc()) { return; }
 
         let appid = this.appid;
-        let response = await Background.action("appdetails", { "appids": appid, "filters": "support_info" })
+        let response = await Background.action("appdetails", {"appids": appid, "filters": "support_info"});
         if (!response || !response[appid] || !response[appid].success) { return; }
 
-        let data = response[appid].data;
-        let url = data.support_info.url;
-        let email = data.support_info.email;
+        let supportInfo = response[appid].data.support_info;
+        let url = supportInfo.url;
+        let email = supportInfo.email;
         if (!email && !url) { return; }
 
-        // From https://emailregex.com/
-        let email_regex =
-            /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        let isEmail = (text) => email_regex.test(text);
+        let support = "";
+        if (url) {
+            support += `<a href="${url}">${Localization.str.website}</a>`;
+        }
+
+        if (email) {
+            if (url) {
+                support += ", ";
+            }
+
+            // From https://emailregex.com/
+            let emailRegex =
+                /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+            if (emailRegex.test(email)) {
+                support += `<a href="mailto:${email}">${Localization.str.email}</a>`;
+            } else {
+                support += `<a href="${email}">${Localization.str.contact}</a>`;
+            }
+        }
 
         let block = document.querySelector(".glance_ctn .user_reviews");
-        let support = ``;
-
-        if (url) { support += `<a href="${url}">${Localization.str.website}</a>`; }
-        if (url && email) { support += `, `; }
-        if (email && isEmail(email)) { support += `<a href="MAILTO:${email}">${Localization.str.email}</a>`; }
-        if (email && !isEmail(email)) { support += `<a href="${email}">${Localization.str.contact}</a>`; }
-
         HTML.beforeEnd(block,
             `<div class="release_date">
                 <div class="subtitle column">${Localization.str.support}:</div>
@@ -1531,14 +1537,13 @@ class AppPageClass extends StorePageClass {
         if (!SyncedStorage.get("show_package_info")) { return; }
 
         let nodes = document.querySelectorAll(".game_area_purchase_game_wrapper");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
-            if (node.querySelector(".btn_packageinfo")) { continue; }
+        for (let node of nodes) {
+            if (node.querySelector(".btn_packageinfo")) return;
 
             let subid = node.querySelector("input[name=subid]").value;
-            if (!subid) { continue; }
+            if (!subid) return;
 
-            HTML.afterBegin(".game_purchase_action",
+            HTML.afterBegin(node.querySelector(".game_purchase_action"),
                 `<div class="game_purchase_action_bg"><div class="btn_addtocart btn_packageinfo">
                  <a class="btnv6_blue_blue_innerfade btn_medium" href="//store.steampowered.com/sub/${subid}/"><span>
                  ${Localization.str.package_info}</span></a></div></div>`);
@@ -1548,7 +1553,7 @@ class AppPageClass extends StorePageClass {
     addSteamChart(result) {
         if (this.isDlc()) { return; }
         if (!SyncedStorage.get("show_steamchart_info")) { return; }
-	if (!result.charts || !result.charts.chart || !result.charts.chart.peakall) { return; }
+	    if (!result.charts || !result.charts.chart || !result.charts.chart.peakall) { return; }
 
         let appid = this.appid;
         let chart = result.charts.chart;
