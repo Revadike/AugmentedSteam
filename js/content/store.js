@@ -566,6 +566,7 @@ class AppPageClass extends StorePageClass {
         this.addWishlistRemove();
         this.addUserNote();
         this.addNewQueueButton();
+        this.addFullscreenScreenshotView();
 
         this.addCoupon();
         this.addPrices();
@@ -911,6 +912,51 @@ class AppPageClass extends StorePageClass {
                 });
             });
         });
+    }
+
+    addFullscreenScreenshotView() {
+        function toggleFullScreen(event) {
+            if (!document.fullscreenElement) {
+                let element = event.target.closest(".screenshot_popup_modal_content");
+                element.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        function initFSVButtons() {
+            let modalFooter = document.querySelector(".screenshot_popup_modal_footer");
+            let nextButton = modalFooter.querySelector(".next");
+            let nextButtonOffsetWidth = nextButton.offsetWidth;
+            if (nextButton.style.display === "none") {
+                nextButton.style.display = "";
+                nextButtonOffsetWidth = nextButton.offsetWidth;
+                nextButton.style.display = "none";
+            }
+            HTML.beforeEnd(modalFooter,
+                `<div class="btnv6_blue_hoverfade btn_medium es_screenshot_fullscreen_toggle" style="right: calc(${nextButtonOffsetWidth}px + 0.5em)"><i></i></div>`);
+            let fsvButton = modalFooter.querySelector(".es_screenshot_fullscreen_toggle");
+            fsvButton.addEventListener("click", toggleFullScreen);
+
+            let modalTitleLink = modalFooter.parentElement.querySelector(".screenshot_popup_modal_title > a");
+            HTML.beforeEnd(modalFooter,
+                `<div class="btnv6_blue_hoverfade btn_medium es_screenshot_download_btn" style="right: calc(${nextButtonOffsetWidth + fsvButton.offsetWidth}px + 1em)" title="${modalTitleLink.textContent.trim()}"><i></i></div>`);
+            let downloadButton = modalFooter.querySelector(".es_screenshot_download_btn");
+            downloadButton.addEventListener("click", () => {
+                modalTitleLink.click();
+            });
+        }
+
+        let observer = new MutationObserver(records => {
+            for (let record of records) {
+                for (let node of record.addedNodes) {
+                    if (node.classList.contains("screenshot_popup_modal")) {
+                        initFSVButtons();
+                    }
+                }
+            }
+        });
+        observer.observe(document.body, { childList: true });
     }
 
     getFirstSubid() {
