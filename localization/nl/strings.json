@@ -1,4 +1,5 @@
 {
+    "view_in_library": "Bekijk in jouw Bibliotheek",
     "support": "Ondersteuning",
     "email": "E-mail",
     "contact": "Contact",
@@ -20,7 +21,6 @@
     "gameplay": "Gameplay",
     "hide_filter": "Verberg __filter__",
     "apppage_franchise": "Franchise",
-    "workshop": "Workshop",
     "external_funds": "Externe Middelen Gebruikt",
     "community_login": "Zorg ervoor dat u ingelogd bent op __link___ om alle functies van Augmented Steam te gebruiken.",
     "playtime": "Speeltijd",
@@ -422,7 +422,6 @@
         "steamdb": "Laat SteamDB links zien",
         "hide_early_access": "Verberg Early Access spellen op hoofdpagina, browse, en zoek paginas",
         "reset_note": "Opties gereset",
-        "html5video": "Laat videos zien via HTML5 in plaats van Flash",
         "profiles_link_group_game": "Game exclusive",
         "friends_wishlist": "Items die je vrienden op hun wenslijst hebben",
         "showspeechsearch": "Voeg spraak invoegen toe aan zoeken",
@@ -496,7 +495,7 @@
     },
     "survey": {
         "performance_survey": "Prestatie enquete",
-        "users": "__users__ gebruikers hebben voltooid de prestatie enquete voor dit spel",
+        "users": "__users__ gebruikers hebben voltooid de prestatie enquete voor dit spel.",
         "framerate": "Framerate",
         "framerate_response": "antwoordde dat de framerate was",
         "framerate_30": "vastgesteld op 30fps of lager",
@@ -510,7 +509,7 @@
         "satisfaction": "Prestatie Tevredenheid van GPU",
         "gs_y": "Heeft ingebouwde grafische opties of een grafische menu",
         "gs_n": "Heeft geen ingebouwde grafische opties of een grafische menu",
-        "nobody": "Nog niemand heeft een prestatie enquete voor dit spel genomen",
+        "nobody": "Nog niemand heeft een prestatie enquete voor dit spel genomen.",
         "take": "Deelnemen aan de enquête"
     },
     "select": {
@@ -588,6 +587,17 @@
     "queue": {
         "new": "Nieuwe Queue",
         "new_tooltip": "Verwijder dit product van jouw Queue en start een nieuwe Queue."
+    },
+    "workshop": {
+        "workshop": "Workshop",
+        "subscriptions": "Abonnementen",
+        "subscribe_all": "Aboneer Op Alles",
+        "unsubscribe_all": "Alles Afmelden",
+        "subscribe_confirm": "Weet u zeker dat u op alle __count__ workshop items met deze filters wilt abonneren?",
+        "unsubscribe_confirm": "Weet u zeker dat u van alle __count__ workshop items met deze filters af wilt melden?",
+        "subscribe_loading": "Abonneren op __i__/__count__ workshop items, een ogenblik geduld astublieft...",
+        "unsubscribe_loading": "Afmelden van __i__/__count__ workshop items, een ogenblik geduld astublieft...",
+        "failed": "__n__ gefaald"
     },
     "this_version": "Deze version",
     "original_authors": "Originele makers",

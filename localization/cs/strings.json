@@ -380,7 +380,6 @@
         "steamdb": "Ukázat odkazy na SteamDB",
         "hide_early_access": "Schovat hry s Předběžným přístupem na hlavní stránce, při procházení a ve výsledcích vyhledávání",
         "reset_note": "Nastavení resetována",
-        "html5video": "Spouštět videa v HTML5 místo Flashe",
         "profiles_link_group_game": "Pouze k určitým hrám",
         "friends_wishlist": "Položky, které vaši přátelé mají na Seznamu přání",
         "showspeechsearch": "Přidat hlasové zadávání do vyhledávacích polí",
@@ -453,7 +452,7 @@
     },
     "survey": {
         "performance_survey": "Průzkum",
-        "users": "__users__ uživatelů podstoupilo průzkum pro tuto hru",
+        "users": "__users__ uživatelů podstoupilo průzkum pro tuto hru.",
         "framerate": "Snímková frekvence",
         "framerate_response": "odpovědělo že snímková frekvence byla",
         "framerate_30": "uzamčena na 30 FPS nebo méně",
@@ -467,7 +466,7 @@
         "satisfaction": "Poměr mezi grafickými kartami",
         "gs_y": "Má možnost nastavení grafiky",
         "gs_n": "Nemá možnost nastavení grafiky",
-        "nobody": "Nikdo dosud nevyplnil dotazník výkonu pro tuto hru",
+        "nobody": "Nikdo dosud nevyplnil dotazník výkonu pro tuto hru.",
         "take": "Vyplnit dotazník"
     },
     "select": {

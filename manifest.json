@@ -70,6 +70,7 @@
       ],
       "exclude_matches": [
         "*://steamcommunity.com/login/*",
+        "*://steamcommunity.com/openid/*",
         "*://steamcommunity.com/tradeoffer/*"
       ],
       "js": [

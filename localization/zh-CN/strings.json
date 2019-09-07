@@ -149,7 +149,6 @@
     "net_gain": "净收益:",
     "apppage_legal": "法律信息",
     "apppage_franchise": "系列作品",
-    "workshop": "创意工坊",
     "bug_feature": "报告错误/提出建议",
     "always": "总是",
     "compare": "比较",
@@ -405,7 +404,6 @@
         "steamdb": "显示 SteamDB 链接",
         "hide_early_access": "在主页、浏览和搜索页面中隐藏抢先体验游戏",
         "reset_note": "重置选项",
-        "html5video": "使用 HTML5 而非 Flash 播放影片",
         "profiles_link_group_game": "独家游戏",
         "friends_wishlist": "好友愿望单中的物品",
         "showspeechsearch": "为搜索框添加语音输入功能",
@@ -488,7 +486,7 @@
     },
     "survey": {
         "performance_survey": "性能调查",
-        "users": "__users__ 位用户已完成此游戏的性能调查",
+        "users": "__users__ 位用户已完成此游戏的性能调查。",
         "framerate": "帧率",
         "framerate_response": "用户反馈帧率",
         "framerate_30": "固定在 30 帧或 30 帧以下",
@@ -502,7 +500,7 @@
         "satisfaction": "GPU 性能表现",
         "gs_y": "具有内置图像选项或图像菜单",
         "gs_n": "没有内置图像选项或图像菜单",
-        "nobody": "尚未有人参与此游戏的性能调查",
+        "nobody": "尚未有人参与此游戏的性能调查。",
         "take": "参与调查"
     },
     "select": {
@@ -581,6 +579,9 @@
     "queue": {
         "new": "开始新队列",
         "new_tooltip": "从您的队列中移除此产品，并开始一个新队列。"
+    },
+    "workshop": {
+        "workshop": "创意工坊"
     },
     "this_version": "当前版本",
     "original_authors": "原版作者",

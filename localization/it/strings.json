@@ -380,7 +380,6 @@
         "steamdb": "Mostra pulsante di Steam Database",
         "hide_early_access": "Nascondi giochi ad Accesso Anticipato su homepage, sfoglia e ricerca",
         "reset_note": "Opzioni resettate",
-        "html5video": "Riproduci i video con HTML5 invece di Flash",
         "profiles_link_group_game": "Gioco esclusivo",
         "friends_wishlist": "Giochi che desiderano i tuoi amici",
         "showspeechsearch": "Aggiungi input vocale al box di ricerca",
@@ -453,7 +452,7 @@
     },
     "survey": {
         "performance_survey": "Sondaggio sulle prestazioni",
-        "users": "__users__ utenti hanno compilato il sondaggio sulle prestazioni di questo gioco",
+        "users": "__users__ utenti hanno compilato il sondaggio sulle prestazioni di questo gioco.",
         "framerate": "Framerate",
         "framerate_response": "ha dichiarato che il framerate è",
         "framerate_30": "fissato a 30fps o meno",
@@ -467,7 +466,7 @@
         "satisfaction": "Soddisfazione sulle prestazioni per GPU",
         "gs_y": "Contiene opzioni o menù dedicati alla grafica",
         "gs_n": "Non contiene opzioni o menù dedicati alla grafica",
-        "nobody": "Nessuno ha ancora compilato il sondaggio sulle prestazioni per questo gioco",
+        "nobody": "Nessuno ha ancora compilato il sondaggio sulle prestazioni per questo gioco.",
         "take": "Partecipa al sondaggio"
     },
     "select": {
