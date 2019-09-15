@@ -24,6 +24,26 @@ let SteamId = (function(){
     return self;
 })();
 
+let GroupID = (function(){
+
+    let self = {};
+    let _groupId = null;
+
+    self.getGroupId = function() {
+        if (_groupId) { return _groupId; }
+
+        if (document.querySelector("#leave_group_form")) {
+            _groupId = document.querySelector("input[name=groupId]").value;
+        } else {
+            _groupId = document.querySelector(".joinchat_bg").getAttribute("onclick").split('\'')[1];
+        }
+
+        return _groupId;
+    };
+
+    return self;
+})();
+
 let ProfileData = (function(){
 
     let self = {};
@@ -342,6 +362,23 @@ let CommunityCommon = (function() {
         }
     };
 
+    self.makeProfileLink = function (id, link, name, iconType, iconUrl) {
+        let mainType = iconUrl ? "none" : iconType;
+        let result =
+            `<div class="es_profile_link profile_count_link">
+               <a class="es_sites_icons es_${id}_icon es_${mainType}" href="${link}" target="_blank">`;
+
+        if (iconType !== "none" && iconUrl) {
+            result += `<i class="es_sites_custom_icon es_${iconType}" style="background-image: url('${iconUrl}');"></i>`;
+        }
+
+        result += `<span class="count_link_label">${name}</span>
+                        <span class="profile_count_link_total">&nbsp;</span> <!-- Steam spacing -->
+                    </a>
+                </div>`;
+        return result;
+    }
+
     return self;
 })();
 
@@ -461,37 +498,37 @@ let ProfileHomePageClass = (function(){
         let links = [
             {
                 "id": "steamrep",
-                "link": `//steamrep.com/profiles/${steamId}`,
+                "link": `https://steamrep.com/profiles/${steamId}`,
                 "name": "SteamRep",
             },
             {
                 "id": "steamdbcalc",
-                "link": `//steamdb.info/calculator/?player=${steamId}`,
+                "link": `https://steamdb.info/calculator/?player=${steamId}`,
                 "name": "SteamDB",
             },
             {
                 "id": "steamgifts",
-                "link": `//www.steamgifts.com/go/user/${steamId}`,
+                "link": `https://www.steamgifts.com/go/user/${steamId}`,
                 "name": "SteamGifts",
             },
             {
                 "id": "steamtrades",
-                "link": `//www.steamtrades.com/user/${steamId}`,
+                "link": `https://www.steamtrades.com/user/${steamId}`,
                 "name": "SteamTrades",
             },
             {
                 "id": "astats",
-                "link": `//www.achievementstats.com/index.php?action=profile&playerId=${steamId}`,
+                "link": `https://www.achievementstats.com/index.php?action=profile&playerId=${steamId}`,
                 "name": "Achievement Stats",
             },
             {
                 "id": "backpacktf",
-                "link": `//backpack.tf/profiles/${steamId}`,
+                "link": `https://backpack.tf/profiles/${steamId}`,
                 "name": "Backpack.tf",
             },
             {
                 "id": "astatsnl",
-                "link": `//astats.astats.nl/astats/User_Info.php?steamID64=${steamId}`,
+                "link": `https://astats.astats.nl/astats/User_Info.php?steamID64=${steamId}`,
                 "name": "AStats.nl",
             }
         ];
@@ -509,17 +546,10 @@ let ProfileHomePageClass = (function(){
         // Build the links HTML
         let htmlstr = "";
 
-        links.forEach(link => {
-            if (!SyncedStorage.get("profile_" + link.id)) { return; }
-
-            htmlstr +=
-                `<div class="es_profile_link profile_count_link">
-                    <a class="es_sites_icons es_${link.id}_icon es_${iconType}" href="${link.link}" target="_blank">
-                        <span class="count_link_label">${link.name}</span>
-                    </a>
-                </div>`;
-
-        });
+        for (let link of links) {
+            if (!SyncedStorage.get("profile_" + link.id)) { continue; }
+            htmlstr += CommunityCommon.makeProfileLink(link.id, link.link, link.name, iconType);
+        }
 
         // custom profile link
         for (let customLink of SyncedStorage.get('profile_custom_link')) {
@@ -541,15 +571,7 @@ let ProfileHomePageClass = (function(){
                 iconType = "none";
             }
 
-            htmlstr +=
-                `<div class="es_profile_link profile_count_link">
-                    <a class="es_sites_icons es_none es_custom_icon" href="${link}" target="_blank">
-                    <span class="count_link_label">${name}</span>`;
-                    if (iconType !== "none") {
-                        htmlstr += `<i class="es_sites_custom_icon es_${iconType}" style="background-image: url(${icon});"></i>`;
-                    }
-                    htmlstr += `</a>
-                </div>`;
+            htmlstr += CommunityCommon.makeProfileLink("custom", link, name, iconType, icon);
         }
 
         // profile permalink
@@ -986,6 +1008,58 @@ let ProfileHomePageClass = (function(){
 
     return ProfileHomePageClass;
 })();
+
+
+let GroupHomePageClass = (function(){
+
+    function GroupHomePageClass() {
+        this.addGroupLinks();
+    }
+
+    GroupHomePageClass.prototype.addGroupLinks = function() {
+
+        let groupId = GroupID.getGroupId();
+        let iconType = "none";
+        let images = SyncedStorage.get("show_profile_link_images");
+        if (images !== "none") {
+            iconType = images === "color" ? "color" : "gray";
+        }
+
+        let links = [
+            {
+                "id": "steamgifts",
+                "link": `https://www.steamgifts.com/go/group/${groupId}`,
+                "name": "SteamGifts",
+            }
+        ];
+
+
+        // Build the links HTML
+        let htmlstr = "";
+
+        for (let link of links) {
+            if (!SyncedStorage.get("group_" + link.id)) { continue; }
+            htmlstr += CommunityCommon.makeProfileLink(link.id, link.link, link.name, iconType);
+        }
+
+        // Insert the links HMTL into the page
+        if (htmlstr) {
+            let linksNode = (document.querySelector(".responsive_hidden > .rightbox")).parentNode;
+            if (linksNode) {
+                HTML.afterEnd(linksNode,
+                   `<div class="rightbox_header"></div>
+                    <div class="rightbox">
+                       <div class="content">${htmlstr}</div>
+                    </div>
+                    <div class="rightbox_footer"></div>`
+                );
+            }
+        }
+
+    };
+    return GroupHomePageClass;
+})();
+
 
 let GamesPageClass = (function(){
 
@@ -1645,8 +1719,8 @@ let InventoryPageClass = (function(){
         });
     }
 
-    function makeMarketButton(id) {
-        return `<a class="item_market_action_button item_market_action_button_green" id="${id}" style="display:none">
+    function makeMarketButton(id, tooltip) {
+        return `<a class="item_market_action_button item_market_action_button_green" id="${id}" data-tooltip-text="${tooltip}" style="display:none">
                     <span class="item_market_action_button_edge item_market_action_button_left"></span>
                     <span class="item_market_action_button_contents"></span>
                     <span class="item_market_action_button_edge item_market_action_button_right"></span>
@@ -1685,8 +1759,11 @@ let InventoryPageClass = (function(){
             thisItem.classList.add("es-loading");
 
             // Add the links with no data, so we can bind actions to them, we add the data later
-            HTML.beforeEnd(marketActions, makeMarketButton("es_quicksell" + assetId));
-            HTML.beforeEnd(marketActions, makeMarketButton("es_instantsell" + assetId));
+            let diff = SyncedStorage.get("quickinv_diff");
+            HTML.beforeEnd(marketActions, makeMarketButton("es_quicksell" + assetId, Localization.str.quick_sell_desc.replace("__modifier__", diff)));
+            HTML.beforeEnd(marketActions, makeMarketButton("es_instantsell" + assetId, Localization.str.instant_sell_desc));
+
+            ExtensionLayer.runInPageContext(() => SetupTooltips( { tooltipCSSClass: "community_tooltip"} ));
 
             // Check if price is stored in data
             if (thisItem.classList.contains("es-price-loaded")) {
@@ -1705,7 +1782,7 @@ let InventoryPageClass = (function(){
                     let marketUrl = "https://steamcommunity.com/market/itemordershistogram?language=english&currency=" + walletCurrency + "&item_nameid=" + marketId;
                     let market = await RequestData.getJson(marketUrl);
 
-                    let priceHigh = parseFloat(market.lowest_sell_order / 100) + parseFloat(SyncedStorage.get("quickinv_diff"));
+                    let priceHigh = parseFloat(market.lowest_sell_order / 100) + parseFloat(diff);
                     let priceLow = market.highest_buy_order / 100;
                     // priceHigh.currency == priceLow.currency == Currency.customCurrency, the arithmetic here is in walletCurrency
 
@@ -3206,7 +3283,7 @@ let MarketPageClass = (function(){
 
     // Show the lowest market price for items you're selling
     MarketPageClass.prototype.addLowestMarketPrice = function() {
-        if (!User.isSignedIn) { return; }
+        if (!User.isSignedIn || !SyncedStorage.get("showlowestmarketprice") || SyncedStorage.get("hideactivelistings")) { return; }
 
         let country = User.getCountry();
         let currencyNumber = Currency.currencyTypeToNumber(Currency.storeCurrency);
@@ -3504,6 +3581,7 @@ let CommunityAppPageClass = (function(){
 
         this.addAppPageWishlist();
         this.addSteamDbLink();
+        this.addBartervgLink();
         this.addItadLink();
         AgeCheck.sendVerification();
 
@@ -3556,18 +3634,20 @@ let CommunityAppPageClass = (function(){
 
     CommunityAppPageClass.prototype.addSteamDbLink = function() {
         if (!SyncedStorage.get("showsteamdb")) { return; }
-        let bgUrl = ExtensionLayer.getLocalUrl("img/steamdb_store.png");
-
         HTML.beforeEnd(".apphub_OtherSiteInfo",
-            ` <a class="btnv6_blue_hoverfade btn_medium" target="_blank" href="https://steamdb.info/app/${this.appid}/"><span><i class="ico16" style="background-image:url('${bgUrl}')"></i>&nbsp; SteamDB</span></a>`);
+            ` <a class="btnv6_blue_hoverfade btn_medium steamdb_ico" target="_blank" href="https://steamdb.info/app/${this.appid}/"><span><i class="ico16"></i>&nbsp;SteamDB</span></a>`);
     };
 
     CommunityAppPageClass.prototype.addItadLink = function() {
         if (!SyncedStorage.get("showitadlinks")) { return; }
-        let bgUrl = ExtensionLayer.getLocalUrl("img/line_chart.png");
-
         HTML.beforeEnd(".apphub_OtherSiteInfo",
-            ` <a class="btnv6_blue_hoverfade btn_medium" target="_blank" href="https://isthereanydeal.com/steam/app/${this.appid}/"><span><i class="ico16" style="background-image:url('${bgUrl}')"></i>&nbsp; ITAD</span></a>`);
+            ` <a class="btnv6_blue_hoverfade btn_medium itad_ico" target="_blank" href="https://isthereanydeal.com/steam/app/${this.appid}/"><span><i class="ico16"></i>&nbsp;ITAD</span></a>`);
+    };
+
+    CommunityAppPageClass.prototype.addBartervgLink = function() {
+        if (!SyncedStorage.get("showbartervg")) { return; }
+        HTML.beforeEnd(".apphub_OtherSiteInfo",
+            ` <a class="btnv6_blue_hoverfade btn_medium bartervg_ico" target="_blank" href="https://barter.vg/steam/app/${this.appid}/"><span><i class="ico16"></i>&nbsp;Barter.vg</span></a>`);
     };
 
     return CommunityAppPageClass;
@@ -3946,6 +4026,10 @@ let OpenIdPageClass = (function(){
 
         case /^\/(?:id|profiles)\/[^\/]+?\/?$/.test(path):
             (new ProfileHomePageClass());
+            break;
+
+        case /^\/groups\/[^\/]+\/?$/.test(path):
+            (new GroupHomePageClass());
             break;
 
         case /^\/app\/[^\/]*\/guides/.test(path):
